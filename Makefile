@@ -4,12 +4,15 @@
 NOSPELL=--add-tex-command="bibliographystyle op" --add-tex-command="bibliography op" --add-tex-command="thispagestyle op"
 PROJECT=intergalactic-computer-network
 
-all: clean manuscript doc # spell
+all: clean article # manuscript doc spell
 	@echo done
 
 clean:
 	rm -rf .build
 	mkdir -p .build
+
+article: timestamp
+	pdflatex -output-directory=.build $(PROJECT).tex
 
 journal: timestamp
 	pdflatex -output-directory=.build "\def\myflag{}\input{$(PROJECT).tex}"
@@ -62,6 +65,6 @@ count:
 	detex $(PROJECT).tex |wc
 
 products: all
-	cp .build/*.pdf products
+	cp -v .build/*.pdf products
 
 .PHONY: all clean manuscript doc spell html open count timestamp journal watch products
