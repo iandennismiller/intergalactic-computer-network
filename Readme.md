@@ -1,5 +1,7 @@
 # Intergalactic Computer Network
 
+A memorandum by J. C. R. Licklider.
+
 ## read
 
 Read the PDF here:
