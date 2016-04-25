@@ -1,0 +1,4 @@
+# usage
+
+make
+open .build

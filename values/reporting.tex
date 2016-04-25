@@ -1,0 +1,42 @@
+\usepackage{amsmath}
+\usepackage{ifthen}
+
+\usepackage{pgfkeys}
+\newcommand{\setvalue}[1]{\pgfkeys{/variables, #1}}
+\newcommand{\getvalue}[1]{\pgfkeysvalueof{/variables/#1}}
+\newcommand{\declare}[1]{%
+ \pgfkeys{
+  /variables/#1.is family,
+  /variables/#1.unknown/.style = {\pgfkeyscurrentpath/\pgfkeyscurrentname/.initial = ##1}
+ }%
+}
+\declare{}
+
+\usepackage{siunitx}
+\sisetup{
+	round-mode = places,
+	round-precision = 3,
+	round-minimum = 0.01,
+	round-half = even,
+    group-digits=true,
+    group-separator={},
+}
+
+% reporting utilities
+
+% print p-value
+\newcommand{\printPvalue}[1]{\ifthenelse{\equal{#1}{0.00000000}}{$p < 0.001$}{$p = \num{#1}$}}
+
+% general linear model (regression)
+% parameter 1 is the analysis, specified as "Outcome R Predictor C Control1 M Moderator1"
+% parameter 2 is the specific term being reported
+\newcommand{\lmresult}[2]{$\beta=\num{\getvalue{#1/#2/beta}}$, $t(\num[round-precision=0]{\getvalue{#1/df}}) = \num{\getvalue{#1/#2/t}}$, \printPvalue{\getvalue{#1/#2/p}}}
+
+% BIC
+% parameter 1 is the analysis, specified as ""
+% BIC of 37765.4 and adjusted $R^2=0.087$ with 6893 degrees of freedom
+\newcommand{\bicresult}[1]{adjusted $R^2=\num{\getvalue{#1/adjr2}}$, $df=\num[round-precision=0]{\getvalue{#1/df}}$, and $BIC=\num[round-precision=1]{\getvalue{#1/bic}}$}
+
+% sobel
+% parameter 1 is the mediation, specified as "Predictor L Mediator L Outcome" (L indicates a "path")
+\newcommand{\sobelresult}[1]{Aroian's $z=\num{\getvalue{#1/aroian/z}}$, \printPvalue{\getvalue{#1/aroian/p}}}
